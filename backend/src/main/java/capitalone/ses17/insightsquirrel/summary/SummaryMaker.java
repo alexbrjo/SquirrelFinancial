@@ -32,4 +32,6 @@ public class SummaryMaker {
         return null;
     }
 
+    public void processTransactions() {}
+
 }
