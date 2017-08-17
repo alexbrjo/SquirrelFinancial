@@ -13,7 +13,7 @@ public interface ScheduleSummary extends DataSummary {
     public String getPattern();
 
     /** Will be 0.00 to 1.00 */
-    public double getCertanty();
+    public double getCertainty();
 
     public static enum TimePeriod {
         HOUR,

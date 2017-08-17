@@ -1,6 +1,15 @@
 package capitalone.ses17.insightsquirrel.summary;
 
-public class VariableTransactionData implements LocationSummary {
+import capitalone.ses17.insightsquirrel.summary.model.Transaction;
+
+import java.util.Date;
+import java.util.List;
+
+public class VariableTransactionData implements LocationSummary, BudgetSummary {
+
+    public VariableTransactionData (List<Transaction> transactions, DateRange range) {
+
+    }
 
     @Override
     public double searchRadius() {
@@ -23,12 +32,35 @@ public class VariableTransactionData implements LocationSummary {
     }
 
     @Override
+    public String getCategory() {
+        return null;
+    }
+
     public DateRange getRangeStart() {
         return null;
     }
 
-    @Override
     public DateRange getRangeEnd() {
         return null;
+    }
+
+    public static class DateRange {
+
+        private Date start;
+
+        private Date end;
+
+        public DateRange (Date start, Date end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public Date getStart () {
+            return start;
+        }
+
+        public Date getEnd(){
+            return end;
+        }
     }
 }

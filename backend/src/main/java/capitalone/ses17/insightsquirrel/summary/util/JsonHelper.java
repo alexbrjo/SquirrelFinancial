@@ -4,6 +4,7 @@ import capitalone.ses17.insightsquirrel.summary.model.Transaction;
 
 import java.util.List;
 
+/** Just to avoid compilation errors */
 public class JsonHelper {
 
     private JsonHelper(){}

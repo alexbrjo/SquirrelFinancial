@@ -4,15 +4,10 @@ import capitalone.ses17.insightsquirrel.summary.model.Transaction;
 
 import java.util.List;
 
-public class FixedTransactionData implements BudgetSummary, ScheduleSummary {
+public class FixedTransactionData implements ScheduleSummary {
 
     public FixedTransactionData (List<Transaction> transactions) {
 
-    }
-
-    @Override
-    public String getCategory() {
-        return null;
     }
 
     @Override
@@ -26,7 +21,7 @@ public class FixedTransactionData implements BudgetSummary, ScheduleSummary {
     }
 
     @Override
-    public double getCertanty() {
+    public double getCertainty() {
         return 0;
     }
 
@@ -35,13 +30,4 @@ public class FixedTransactionData implements BudgetSummary, ScheduleSummary {
         return null;
     }
 
-    @Override
-    public DateRange getRangeStart() {
-        return null;
-    }
-
-    @Override
-    public DateRange getRangeEnd() {
-        return null;
-    }
 }
