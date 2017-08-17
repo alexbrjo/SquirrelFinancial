@@ -13,6 +13,7 @@ public class Summary {
     public String location;
     public String category;
     public LocationSummaryEntry.DateRange range;
+    public double total;
 
     private List<SummaryEntry> entries;
 }
