@@ -9,4 +9,5 @@ public class SquirrelApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SquirrelApplication.class, args);
 	}
+
 }
