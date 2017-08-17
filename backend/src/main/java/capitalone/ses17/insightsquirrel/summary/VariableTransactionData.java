@@ -54,7 +54,13 @@ public class VariableTransactionData implements LocationSummary, BudgetSummary {
     }
 
     private void generateLocationData (double latitude, double logitude, double radius) {
+
         /* FIXME Query elasticsearch for location */
+        double total = 0;
+        for (Transaction transaction : transactions) {
+            total += transaction.getAmmount();
+        }
+
     }
 
     /**
