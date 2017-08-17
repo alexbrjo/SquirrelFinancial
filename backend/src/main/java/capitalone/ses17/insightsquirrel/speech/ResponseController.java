@@ -29,32 +29,35 @@ public class ResponseController {
         String datePeriod = JsonPath.read(payload, "$.request.intent.slots.dateperiodslot.value");
         Calendar calendar = DatatypeConverter.parseDateTime(datePeriod);
         Date date = calendar.getTime();
-        String region = JsonPath.read(payload, "$.request.intent.slots.regionslot.value");
-        String category = JsonPath.read(payload, "$.request.intent.slots.category.value");
+        response = date.toString();
 
+      //  String location = JsonPath.read(payload, "$.request.intent.slots.regionslot.value");
+        //String category = JsonPath.read(payload, "$.request.intent.slots.category.value");
+
+        double r = 3.14;
+        Summary summary = summaryMaker.getSummary(r, "",date, date,"" );
+        /*
         switch (intent) {
             case "Budget":
-                BudgetSummary budgetSummary = null;
+
                 response = budgetResponse(budgetSummary);
                 break;
             case "Data":
-                DataSummary dataSummary = summaryMaker.getAllSummary();
+
                 response = dataResponse(dataSummary);
                 break;
             case "Location":
-                LocationSummary locationSummary = null;
+
                 response = locationResponse(locationSummary);
-                break;
-            case "Schedule":
-                List<ScheduleSummary> scheduleSummary = summaryMaker.getScheduleSummaries();
-                response = scheduleResponse(scheduleSummary);
                 break;
             default:
                 break;
         }
+        */
         return response;
     }
 
+    /*
     public String budgetResponse(BudgetSummary summary) {
 
         String response = "You have spent " + " percent of your budget on food, " + " percent on ";
@@ -77,4 +80,5 @@ public class ResponseController {
         String r = null;
         return r;
     }
+    */
 }
