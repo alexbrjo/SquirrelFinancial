@@ -1,8 +1,10 @@
 package capitalone.ses17.insightsquirrel.summary;
 
 import capitalone.ses17.insightsquirrel.elastic.ElasticController;
+import capitalone.ses17.insightsquirrel.summary.model.Transaction;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
@@ -27,7 +29,7 @@ public class SummaryMaker {
     public Summary getSummary(double radius, String location,
                               Date start, Date end, String category) {
 
-        GeoApiContext context = new GeoApiContext.Builder()
+       /* GeoApiContext context = new GeoApiContext.Builder()
                 //.apiKey("YOUR-KEY-HERE")
                 .build();
 
@@ -46,10 +48,19 @@ public class SummaryMaker {
         String json = elasticController.getTimeLocationCategoy(start, end, latitude, longitude, category);
 
         // parse json
+        Gson gson = new Gson();
+        Transaction transaction = gson.fromJson(json, Transaction.class);
 
         // transform data
-
+*/
         Summary summary = new Summary();
+
+        summary.category = "food";
+        summary.humanizedDate = "the last week";
+        summary.total = 500;
+        summary.fromDate = new Date(1499659200000L);
+        summary.toDate = new Date(1498881600000L);
+        summary.location = "Arlington";
 
         return summary;
     }
