@@ -1,8 +1,8 @@
 package capitalone.ses17.insightsquirrel.summary;
 
 import capitalone.ses17.insightsquirrel.summary.model.Transaction;
+import sun.util.calendar.CalendarDate;
 
-import java.util.Date;
 import java.util.List;
 
 public class VariableTransactionData implements LocationSummary, BudgetSummary {
@@ -46,20 +46,20 @@ public class VariableTransactionData implements LocationSummary, BudgetSummary {
 
     public static class DateRange {
 
-        private Date start;
+        private CalendarDate start;
 
-        private Date end;
+        private CalendarDate end;
 
-        public DateRange (Date start, Date end) {
+        public DateRange (CalendarDate start, CalendarDate end) {
             this.start = start;
             this.end = end;
         }
 
-        public Date getStart () {
+        public CalendarDate getStart () {
             return start;
         }
 
-        public Date getEnd(){
+        public CalendarDate getEnd(){
             return end;
         }
     }
