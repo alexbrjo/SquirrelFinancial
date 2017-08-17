@@ -3,6 +3,7 @@ package capitalone.ses17.insightsquirrel.speech;
 import java.util.concurrent.atomic.AtomicLong;
 
 
+import capitalone.ses17.insightsquirrel.summary.SummaryMaker;
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,9 @@ public class ResponseController {
             consumes = "application/json")
     public String response(@RequestBody String payload) {
         String intent = JsonPath.read(payload, "$.request.intent.name");
-        String response = null;
+        //SummaryMaker instance = new SummaryMaker();
+        String response = "TEST";
+        /*
         switch (intent) {
             case "Budget":
                 response = budgetResponse(payload);
@@ -42,6 +45,7 @@ public class ResponseController {
             default:
                 break;
         }
+        */
         return response;
     }
 
