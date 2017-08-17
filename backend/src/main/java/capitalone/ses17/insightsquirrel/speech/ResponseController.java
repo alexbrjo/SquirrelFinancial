@@ -1,7 +1,10 @@
 package capitalone.ses17.insightsquirrel.speech;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.xml.bind.DatatypeConverter;
 
 
 import capitalone.ses17.insightsquirrel.summary.*;
@@ -26,6 +29,11 @@ public class ResponseController {
 
         switch (intent) {
             case "Budget":
+                String datePeriod = JsonPath.read(payload, "$.request.intent.slots.dateperiodslot.value");
+                Calendar calendar = DatatypeConverter.parseDateTime(datePeriod);
+                Date date = calendar.getTime();
+                String region = JsonPath.read(payload, "$.request.intent.slots.regionslot.value");
+                String category = JsonPath.read(payload, "$.request.intent.slots.category.value");
                 BudgetSummary budgetSummary = null;
                 response = budgetResponse(budgetSummary);
                 break;
