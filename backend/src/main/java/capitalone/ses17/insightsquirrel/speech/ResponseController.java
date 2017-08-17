@@ -24,16 +24,16 @@ public class ResponseController {
             consumes = "application/json")
     public String response(@RequestBody String payload) {
         String intent = JsonPath.read(payload, "$.request.intent.name");
-        //SummaryMaker instance = new SummaryMaker();
-        String response = "TEST";
+        // default response if request fails
+        String response = "I'm sorry, I'm unable to find financial data on that request.";
+        String datePeriod = JsonPath.read(payload, "$.request.intent.slots.dateperiodslot.value");
+        Calendar calendar = DatatypeConverter.parseDateTime(datePeriod);
+        Date date = calendar.getTime();
+        String region = JsonPath.read(payload, "$.request.intent.slots.regionslot.value");
+        String category = JsonPath.read(payload, "$.request.intent.slots.category.value");
 
         switch (intent) {
             case "Budget":
-                String datePeriod = JsonPath.read(payload, "$.request.intent.slots.dateperiodslot.value");
-                Calendar calendar = DatatypeConverter.parseDateTime(datePeriod);
-                Date date = calendar.getTime();
-                String region = JsonPath.read(payload, "$.request.intent.slots.regionslot.value");
-                String category = JsonPath.read(payload, "$.request.intent.slots.category.value");
                 BudgetSummary budgetSummary = null;
                 response = budgetResponse(budgetSummary);
                 break;
