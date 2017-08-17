@@ -17,18 +17,10 @@ public class SummaryMaker {
     public Summary getSummary(double radius, double latitude, double longitude,
                               CalendarDate start, CalendarDate end, String category) {
 
+        Summary s = new Summary();
+        // build query for elastic search
+
         return null;
     }
-
-    // unused
-    public LocationSummary getLocationSummary(double radius, double latitude, double longitude){
-        return null;
-    }
-
-    public List<ScheduleSummary> getScheduleSummaries () {
-        return null;
-    }
-
-    public void processTransactions() {}
 
 }

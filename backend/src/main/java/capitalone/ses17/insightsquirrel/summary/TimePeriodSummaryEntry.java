@@ -5,41 +5,19 @@ import sun.util.calendar.CalendarDate;
 
 import java.util.*;
 
-public class FixedTransactionData implements ScheduleSummary, Runnable {
+public class TimePeriodSummaryEntry extends SummaryEntry {
 
     private List<Transaction> transactions;
     private String pattern;
     private TimePeriod timePeriod;
+    public static enum TimePeriod {
+        WEEK
+    }
     private double certainty;
     private String summaryName;
 
-    public FixedTransactionData (List<Transaction> transactions) {
+    public TimePeriodSummaryEntry(List<Transaction> transactions) {
         this.transactions = transactions;
-    }
-
-    @Override
-    public void run() {
-        findBestPattern();
-    }
-
-    @Override
-    public TimePeriod getTimePeriod() {
-        return null;
-    }
-
-    @Override
-    public String getPattern() {
-        return null;
-    }
-
-    @Override
-    public double getCertainty() {
-        return 0;
-    }
-
-    @Override
-    public String getSummaryName() {
-        return null;
     }
 
     /**

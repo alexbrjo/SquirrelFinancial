@@ -9,11 +9,10 @@ import java.util.List;
  */
 public class Summary {
 
-    private List<SummaryEntry> entries;
+    /* all never null */
+    public String location;
+    public String category;
+    public LocationSummaryEntry.DateRange range;
 
-    public static class SummaryEntry {
-        public String location;
-        public String category;
-        public VariableTransactionData.DateRange range;
-    }
+    private List<SummaryEntry> entries;
 }
