@@ -9,6 +9,8 @@ public class Transaction {
         return 0;
     }
 
+    public String getCategory() { return ""; }
+
     public CalendarDate getDate () {
         return null;
     }

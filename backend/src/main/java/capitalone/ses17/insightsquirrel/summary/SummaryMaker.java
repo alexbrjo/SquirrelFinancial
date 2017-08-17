@@ -1,5 +1,7 @@
 package capitalone.ses17.insightsquirrel.summary;
 
+import org.springframework.stereotype.Controller;
+
 import java.util.List;
 
 /**
@@ -7,18 +9,9 @@ import java.util.List;
  *
  * @author Alex Johnson
  */
+
+@Controller
 public class SummaryMaker {
-
-    private static SummaryMaker instance;
-
-    private SummaryMaker(){}
-
-    private static SummaryMaker getInstance () {
-        if (instance == null) {
-            instance = new SummaryMaker();
-        }
-        return instance;
-    }
 
     public DataSummary getAllSummary() {
         return null;

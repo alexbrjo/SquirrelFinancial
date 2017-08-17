@@ -5,12 +5,21 @@ import sun.util.calendar.CalendarDate;
 
 import java.util.*;
 
-public class FixedTransactionData implements ScheduleSummary {
+public class FixedTransactionData implements ScheduleSummary, Runnable {
 
-    List<Transaction> transactions;
+    private List<Transaction> transactions;
+    private String pattern;
+    private TimePeriod timePeriod;
+    private double certainty;
+    private String summaryName;
 
     public FixedTransactionData (List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    @Override
+    public void run() {
+        findBestPattern();
     }
 
     @Override
@@ -34,17 +43,25 @@ public class FixedTransactionData implements ScheduleSummary {
     }
 
     /**
+     *
+     */
+    private void findBestPattern () {
+
+    }
+
+    /**
      * Heart of the beast. Can find patterns for transactions that occur semi-regularly on:
-     *      an hour of day  / daily
      *      a day of week   / weekly
-     *      a day of month  / monthly
      *
      * The implementation considers large data sets and tries to minimize the number of unused
-     * collections.
+     * collections. Also considers adding support for:
+     *      an hour of day  / daily
+     *      a day of month  / monthly
+     *      part of month   / monthly
      *
-     * @param timePeriod
+     * @param timePeriod the TimePeriod to analyze
      */
-    private void findPatternForTransactions(TimePeriod timePeriod) {
+    private void findPatternForTimePeriod(TimePeriod timePeriod) {
 
         if (transactions.size() <= 1) {
             // not enough transactions to make judgement
@@ -75,7 +92,7 @@ public class FixedTransactionData implements ScheduleSummary {
          *       T x x x x x
          *       S x x
          *  day  M x x
-         * of    W x
+         *  of   W x
          * week  S x
          *       R x
          *       H
@@ -105,10 +122,11 @@ public class FixedTransactionData implements ScheduleSummary {
         if (group.size() > 1) {
             int canidateSize = group.get(0).getValue().size();
             int rivalSize = group.get(1).getValue().size();
-
             double certainty = (canidateSize - rivalSize) / canidateSize;
         } else {
             /* certainy 100% if group size one and transactions > 1 */
+            certainty = 1.0;
+            pattern = "";
             return;
         }
     }
@@ -121,5 +139,4 @@ public class FixedTransactionData implements ScheduleSummary {
             return "0";
         }
     }
-
 }

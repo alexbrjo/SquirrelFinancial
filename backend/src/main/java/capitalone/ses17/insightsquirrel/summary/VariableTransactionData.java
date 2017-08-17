@@ -7,8 +7,11 @@ import java.util.List;
 
 public class VariableTransactionData implements LocationSummary, BudgetSummary {
 
-    public VariableTransactionData (List<Transaction> transactions, DateRange range) {
+    private List<Transaction> transactions;
+    private DateRange range;
 
+    public VariableTransactionData (List<Transaction> transactions, DateRange range) {
+        this.transactions = transactions;
     }
 
     @Override
@@ -61,6 +64,13 @@ public class VariableTransactionData implements LocationSummary, BudgetSummary {
 
         public CalendarDate getEnd(){
             return end;
+        }
+    }
+
+    private void generateBudgetData () {
+        //Map<String, List<Transaction>>
+        for (Transaction t: transactions) {
+
         }
     }
 }
