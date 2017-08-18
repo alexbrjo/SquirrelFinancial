@@ -81,10 +81,12 @@ public class ResponseController {
         FutureSpendingSummary summary = summaryMaker.getFutureSpending(name, fromDate, toDate);
 
         int multiplier = 7;
+        String period = "week";
         if (!timePeriod.contains("W")) {
             multiplier = 30;
+            period = "month";
         }
-        response = String.format("I'm guessing you will spend $%.2f in the next week", summary.total * multiplier);
+        response = String.format("I'm guessing you will spend $%.2f in the next %s", summary.total * multiplier, period);
         if (summary.name != null) {
             response += String.format(" on %s", summary.name);
         }
