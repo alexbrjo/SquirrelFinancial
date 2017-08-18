@@ -5,6 +5,9 @@ import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class ResponseController {
 
@@ -45,10 +48,12 @@ public class ResponseController {
             String response = futureSpendingIntent(fromDate, toDate, name, timePeriod);
             return response == null ? DEFAULT_RESPONSE : response;
         } else if (intent.equals("Distribution")) {
-            String fromDate = JsonPath.read(payload, "$.request.intent.slots.fromdate.value");
-            String toDate = JsonPath.read(payload, "$.request.intent.slots.todate.value");
-            String city = fixNull(JsonPath.read(payload, "$.request.intent.slots.City.value"));
-            String state = fixNull(JsonPath.read(payload, "$.request.intent.slots.State.value"));
+            String fromDate = JsonPath.read(payload, "$.request.intent.slots.diststart.value");
+            String toDate = JsonPath.read(payload, "$.request.intent.slots.distend.value");
+            if (fromDate.contains("2018")) {
+                fromDate = fromDate.replace("2018", "2017");
+                toDate = toDate.replace("2018", "2017");
+            }
             String response = distributionIntent(fromDate, toDate);
             return response == null ? DEFAULT_RESPONSE : response;
         } else {
@@ -94,14 +99,16 @@ public class ResponseController {
     }
 
     private String distributionIntent (String fromDate, String toDate) {
-        String response = null;
+        String response = "";
         SpendingAdviceSummary summary = summaryMaker.getSpendingAdvice(fromDate, toDate);
 
-        response = String.format("$%.2f of your budget was spent on ", summary.category);
-        if (summary.category != null) {
-            response += String.format(" on %s", summary.category);
+        response += "Your spending distribution is as follows, ";
+        for (Object entry : summary.distribution.entrySet()) {
+            HashMap.Entry<String, Double> entryMap = (HashMap.Entry<String, Double>) entry;
+            response += String.format("%.2f%% on %s, ", (entryMap.getValue() / summary.total) * 100, entryMap.getKey());
         }
-        response += String.format(" based on %d purchases", summary.purchases);
+
+        response += String.format("based on %d purchases", summary.purchases);
 
         return response;
     }

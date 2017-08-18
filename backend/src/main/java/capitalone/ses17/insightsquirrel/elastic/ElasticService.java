@@ -165,7 +165,14 @@ public class ElasticService {
                         "        \"field\": \"merchant.category.keyword\",\n" +
                         "        \"size\": 10,\n" +
                         "        \"order\": {\n" +
-                        "          \"_count\": \"desc\"\n" +
+                        "          \"1\": \"desc\"\n" +
+                        "        }\n" +
+                        "      },\n" +
+                        "      \"aggs\": {\n" +
+                        "        \"1\": {\n" +
+                        "          \"sum\": {\n" +
+                        "            \"field\": \"purchase.amount\"\n" +
+                        "          }\n" +
                         "        }\n" +
                         "      }\n" +
                         "    }\n" +
