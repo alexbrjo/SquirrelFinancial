@@ -44,6 +44,7 @@ public class SummaryMaker {
         String json = elasticController.getTimeLocationCategoy(start, end, latitude, longitude, category);
 
         // transform data
+
         Summary summary = new Summary();//JsonHelper.jsonToTransactions(json));
 
         summary.category = JsonPath.read(json, "$.hits.hits[0]._source.merchant.category[0]").toString();
