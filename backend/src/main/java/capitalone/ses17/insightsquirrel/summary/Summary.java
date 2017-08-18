@@ -1,5 +1,7 @@
 package capitalone.ses17.insightsquirrel.summary;
 
+import capitalone.ses17.insightsquirrel.summary.model.Transaction;
+
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +11,10 @@ import java.util.List;
  * @author Alex Johnson
  */
 public class Summary {
+
+    public Summary () {}
+
+    public Summary (List<Transaction> transactions) {}
 
     /* all never null */
     public String location;
