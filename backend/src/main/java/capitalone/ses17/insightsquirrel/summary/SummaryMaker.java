@@ -36,7 +36,7 @@ public class SummaryMaker {
     public SpendingAdviceSummary getSpendingAdvice(String fromDate, String toDate) {
 
         String json = ""; // elasticController.getSpendingProfile()
-        return new SpendingAdviceSummary(json);
+        return new SpendingAdviceSummary(json, fromDate, toDate);
     }
 
     /*

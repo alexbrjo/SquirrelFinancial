@@ -35,24 +35,22 @@ public class ResponseController {
             String state = fixNull(JsonPath.read(payload, "$.request.intent.slots.State.value"));
             String category = JsonPath.read(payload, "$.request.intent.slots.Category.value");
             String location = fixEmpty(city + " " + state);
-            String reponse = pastSpendingIntent(location, fromDate, toDate, category);
-            return reponse == null ? DEFAULT_RESPONSE : reponse;
+            String response = pastSpendingIntent(location, fromDate, toDate, category);
+            return response == null ? DEFAULT_RESPONSE : response;
         } else if (intent.equals("FutureSpending")) {
             String toDate = "2017-08-18";
             String fromDate = "2017-08-04";
             String timePeriod = JsonPath.read(payload, "$.request.intent.slots.timeperiod.value");
             String name = JsonPath.read(payload, "$.request.intent.slots.futuremerchant.value");
-            String reponse = futureSpendingIntent(fromDate, toDate, name, timePeriod);
-            return reponse == null ? DEFAULT_RESPONSE : reponse;
+            String response = futureSpendingIntent(fromDate, toDate, name, timePeriod);
+            return response == null ? DEFAULT_RESPONSE : response;
         } else if (intent.equals("Distribution")) {
             String fromDate = JsonPath.read(payload, "$.request.intent.slots.fromdate.value");
             String toDate = JsonPath.read(payload, "$.request.intent.slots.todate.value");
             String city = fixNull(JsonPath.read(payload, "$.request.intent.slots.City.value"));
             String state = fixNull(JsonPath.read(payload, "$.request.intent.slots.State.value"));
-            String category = JsonPath.read(payload, "$.request.intent.slots.Category.value");
-            String location = fixEmpty(city + " " + state);
-            String reponse = distributionIntent(location, fromDate, toDate, category);
-            return reponse == null ? DEFAULT_RESPONSE : reponse;
+            String response = distributionIntent(fromDate, toDate);
+            return response == null ? DEFAULT_RESPONSE : response;
         } else {
             return DEFAULT_RESPONSE;
         }
@@ -95,9 +93,15 @@ public class ResponseController {
         return response;
     }
 
-
-    private String distributionIntent(String location, String fromDate, String toDate, String category) {
+    private String distributionIntent (String fromDate, String toDate) {
         String response = null;
+        SpendingAdviceSummary summary = summaryMaker.getSpendingAdvice(fromDate, toDate);
+
+        response = String.format("$%.2f of your budget was spent on ", summary.category);
+        if (summary.category != null) {
+            response += String.format(" on %s", summary.category);
+        }
+        response += String.format(" based on %d purchases", summary.purchases);
 
         return response;
     }
