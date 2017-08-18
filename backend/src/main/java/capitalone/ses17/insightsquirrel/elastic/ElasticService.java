@@ -56,7 +56,7 @@ public class ElasticService {
                         "    }\n" +
                         "  }\n" +
                         "}",
-                category, 20, lat, lon, fromDate, toDate);
+                category, 50, lat, lon, fromDate, toDate);
         try {
             HttpResponse<String> response = Unirest.post("http://ec2-52-55-165-133.compute-1.amazonaws.com:9200/logstash-squirrel-%2A/_search")
                     .header("content-type", "application/json")

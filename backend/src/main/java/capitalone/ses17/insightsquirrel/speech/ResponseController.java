@@ -41,9 +41,9 @@ public class ResponseController {
         double r = 20;
         PastSpendingSummary summary = summaryMaker.getPastSpending(r, location, fromDate, toDate, category);
 
-        response = String.format("From %s to %s, you spent %f", summary, summary.toDate, summary.total);
+        response = String.format("From %s to %s, you spent $%.2f", summary.fromDate, summary.toDate, summary.total);
         if (summary.category != null) {
-            response += String.format(" on %s", summary.category);
+            response += String.format(" over %d purchases on %s", summary.purchases, summary.category);
         }
         if (summary.location != null) {
             response += String.format(" in %s", summary.location);

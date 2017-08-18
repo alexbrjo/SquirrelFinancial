@@ -24,7 +24,7 @@ public class SummaryMaker {
                                         String fromDate, String toDate, String category) {
 
         LatLng loc = getCoordinates(location);
-        String json = elasticController.getTimeLocationCategoy(fromDate, toDate, loc.lat, loc.lng, category);
+        String json = elasticController.getTimeLocationCategoy(fromDate, toDate, loc.lng, loc.lat, category);
         return new PastSpendingSummary(json, fromDate, toDate, location, category);
     }
 
@@ -54,6 +54,8 @@ public class SummaryMaker {
         } catch (Exception e) {
             // yikes
         }
+
+        System.out.println(results[0].geometry.location);
 
         return results[0].geometry.location;
     }
