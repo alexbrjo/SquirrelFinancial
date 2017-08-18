@@ -19,7 +19,7 @@ public class CategoryBudgetSummaryEntry extends SummaryEntry {
     /**
      * Main alg, creates categorized budget
      */
-    private void generateBudgetData (LocationSummaryEntry.DateRange range) {
+    private void generateBudgetData () {
 
         /* FIXME Query elasticsearch for range */
 

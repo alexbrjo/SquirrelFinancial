@@ -1,17 +1,21 @@
 package capitalone.ses17.insightsquirrel.speech;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.xml.bind.DatatypeConverter;
 
 
-import capitalone.ses17.insightsquirrel.summary.SummaryMaker;
+import capitalone.ses17.insightsquirrel.summary.*;
 import com.jayway.jsonpath.JsonPath;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ResponseController {
-    private static final String template = "Hello, %s!";
-    private final AtomicLong counter = new AtomicLong();
-
+    @Autowired
+    private SummaryMaker summaryMaker;
     /*
     POST endpoint that receives JSON data and formulates a response to send to Alexa.
     Default response is null if no response can be created.
@@ -20,65 +24,61 @@ public class ResponseController {
             consumes = "application/json")
     public String response(@RequestBody String payload) {
         String intent = JsonPath.read(payload, "$.request.intent.name");
-        //SummaryMaker instance = new SummaryMaker();
-        String response = "TEST";
+        // default response if request fails
+        String response = "I'm sorry, I'm unable to find financial data on that request.";
+        String datePeriod = JsonPath.read(payload, "$.request.intent.slots.dateperiodslot.value");
+        Calendar calendar = DatatypeConverter.parseDateTime(datePeriod);
+        Date date = calendar.getTime();
+        response = date.toString();
+
+      //  String location = JsonPath.read(payload, "$.request.intent.slots.regionslot.value");
+        //String category = JsonPath.read(payload, "$.request.intent.slots.category.value");
+
+        double r = 3.14;
+        Summary summary = summaryMaker.getSummary(r, "",date, date,"" );
         /*
         switch (intent) {
             case "Budget":
-                response = budgetResponse(payload);
+
+                response = budgetResponse(budgetSummary);
                 break;
             case "Data":
-                response = dataResponse(payload);
+
+                response = dataResponse(dataSummary);
                 break;
             case "Location":
-                response = locationResponse(payload);
-                break;
-            case "Schedule":
-                response = scheduleResponse(payload);
-                break;
-            case "Credit":
-                response = creditResponse(payload);
-                break;
-            case "CreditCard":
-                response = creditCardResponse(payload);
+
+                response = locationResponse(locationSummary);
                 break;
             default:
                 break;
         }
         */
-        return intent;
+        return response;
     }
 
-    public String budgetResponse(String payload) {
+    /*
+    public String budgetResponse(BudgetSummary summary) {
 
         String response = "You have spent " + " percent of your budget on food, " + " percent on ";
         return response;
     }
 
-    public String dataResponse(String payload) {
+    public String dataResponse(DataSummary summary) {
         String r = null;
         return r;
     }
 
-    public String locationResponse(String payload) {
-        String totalSpent = JsonPath.read(payload, "$.request.intent.slots");
-        String location = JsonPath.read(payload, "$.request.intent.slots");
-        String response = "You spent " + totalSpent + " dollars in ";
+    public String locationResponse(LocationSummary summary) {
+
+        String response = "You spent " +  " dollars in ";
         return response;
     }
 
-    public String scheduleResponse(String payload) {
+    public String scheduleResponse(List<ScheduleSummary> summary) {
+
         String r = null;
         return r;
     }
-
-    public String creditResponse(String payload) {
-        String response = "Credit allows you to buy something now with an agreement to pay for it later. This can be in the form of loans or credit cards";
-        return response;
-    }
-
-    public String creditCardResponse(String payload){
-        String response = "A credit card allows you to use credit to make purchases up to a maximum credit limit. You can keep a balance and pay the money back over time while paying interest.";
-        return response;
-    }
+    */
 }
