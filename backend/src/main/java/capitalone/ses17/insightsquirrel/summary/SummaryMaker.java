@@ -2,6 +2,7 @@ package capitalone.ses17.insightsquirrel.summary;
 
 import capitalone.ses17.insightsquirrel.elastic.ElasticController;
 import capitalone.ses17.insightsquirrel.summary.model.Transaction;
+import capitalone.ses17.insightsquirrel.summary.util.JsonHelper;
 import com.google.gson.Gson;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
@@ -43,7 +44,8 @@ public class SummaryMaker {
         String json = elasticController.getTimeLocationCategoy(start, end, latitude, longitude, category);
 
         // transform data
-        Summary summary = new Summary();
+
+        Summary summary = new Summary();//JsonHelper.jsonToTransactions(json));
 
         summary.category = JsonPath.read(json, "$.hits.hits[0]._source.merchant.category[0]").toString();
         summary.humanizedDate = "the last week";
@@ -53,6 +55,11 @@ public class SummaryMaker {
         summary.location = location;
 
         return summary;
+    }
+
+    public Summary getPrediction(double radius, String location,
+                              Date start, Date end, String category) {
+        return null;
     }
 
     public static void main (String[] args) {

@@ -22,6 +22,7 @@ public class ElasticService {
                     .header("postman-token", "bdf1c1ea-f7f9-27ac-cc29-5af0ca95ca8f")
                     .body("{\n  \"query\": {\n    \"bool\": {\n      \"must\": [\n        {\n          \"query_string\": { \"query\": \"merchant.category: Food\"}\n        },\n        {\n          \"geo_distance\": {\n            \"distance\": \"3000km\",\n            \"geoip.location\": {\n              \"lat\": 38.878337,\n              \"lon\": -77.100703\n            }\n          }\n        },\n        {\n          \"range\": {\n            \"@timestamp\": {\n              \"gte\": \"2017/08/01\",\n              \"lte\": \"2017/08/14\",\n              \"format\": \"yyyy/MM/dd\"\n            }\n          }\n        }\n      ]\n    }\n  }\n}")
                     .asString();
+
             return response.getBody();
         } catch (UnirestException e) {
             e.printStackTrace();
