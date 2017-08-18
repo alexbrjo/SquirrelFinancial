@@ -1,7 +1,6 @@
 package capitalone.ses17.insightsquirrel.summary;
 
 import capitalone.ses17.insightsquirrel.elastic.ElasticController;
-import capitalone.ses17.insightsquirrel.summary.util.JsonHelper;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
@@ -28,10 +27,10 @@ public class SummaryMaker {
         return new PastSpendingSummary(json, fromDate, toDate, location, category);
     }
 
-    public FurtureSpendingSummary getFutureSpending(String name, String fromDate, String toDate) {
+    public FutureSpendingSummary getFutureSpending(String name, String fromDate, String toDate) {
 
-        String json = elasticController.getAverageTimeCategory(null, null, name);
-        return new FurtureSpendingSummary(json);
+        String json = ""; //elasticController.getAverageTimeCategory(fromDate, toDate, name);
+        return new FutureSpendingSummary(json, fromDate, toDate, name);
     }
 
     public SpendingAdviceSummary getSpendingAdvice(String fromDate, String toDate) {
