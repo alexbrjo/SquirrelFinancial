@@ -16,7 +16,46 @@ public class ElasticService {
 
     public String DateLocationCategory(String fromDate, String toDate, double lon, double lat, String category) {
 
-        String query = String.format("{\n  \"query\": {\n    \"bool\": {\n      \"must\": [\n        {\n          \"query_string\": { \"query\": \"merchant.category: %s\"}\n        },\n        {\n          \"geo_distance\": {\n            \"distance\": \"%dkm\",\n            \"geoip.location\": {\n              \"lat\": %f,\n              \"lon\": %f\n            }\n          }\n        },\n        {\n          \"range\": {\n            \"@timestamp\": {\n              \"gte\": \"%s\",\n              \"lte\": \"%s\",\n              \"format\": \"yyyy-MM-dd\"\n            }\n          }\n        }\n      ]\n    }\n  }\n}",
+        String query = String.format("{\n" +
+                        "  \"query\": {\n" +
+                        "    \"bool\": {\n" +
+                        "      \"must\": [\n" +
+                        "        {\n" +
+                        "          \"query_string\": { \"query\": \"merchant.category: %s\"}\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "          \"geo_distance\": {\n" +
+                        "            \"distance\": \"%dkm\",\n" +
+                        "            \"geoip.location\": {\n" +
+                        "              \"lat\": %f,\n" +
+                        "              \"lon\": %f\n" +
+                        "            }\n" +
+                        "          }\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "          \"range\": {\n" +
+                        "            \"@timestamp\": {\n" +
+                        "              \"gte\": \"%s\",\n" +
+                        "              \"lte\": \"%s\",\n" +
+                        "              \"format\": \"yyyy-MM-dd\"\n" +
+                        "            }\n" +
+                        "          }\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    }\n" +
+                        "  },\n" +
+                        "  \"size\": 0,\n" +
+                        "  \"_source\": {\n" +
+                        "    \"excludes\": []\n" +
+                        "  }," +
+                        "  \"aggs\": {\n" +
+                        "    \"1\": {\n" +
+                        "      \"sum\": {\n" +
+                        "        \"field\": \"purchase.amount\"\n" +
+                        "      }\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}",
                 category, 20, lat, lon, fromDate, toDate);
         try {
             HttpResponse<String> response = Unirest.post("http://ec2-52-55-165-133.compute-1.amazonaws.com:9200/logstash-squirrel-%2A/_search")
