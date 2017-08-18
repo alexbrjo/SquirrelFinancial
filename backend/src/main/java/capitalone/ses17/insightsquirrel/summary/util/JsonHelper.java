@@ -31,8 +31,8 @@ public class JsonHelper {
         transcation.categories = Collections.singletonList(
                 JsonPath.read(json, "_source.merchant.category[0]"));
         transcation.ammount = ((Double) JsonPath.read(json, "_source.purchase.amount")).doubleValue();
-        transcation.fromDate = JsonPath.read(json, "$.transactions[0].purchase.purchase_date");
-        transcation.toDate = JsonPath.read(json, "$.transactions[0].purchase.purchase_date");
+        //transcation.fromDate = JsonPath.read(json, "$.transactions[0].purchase.purchase_date");
+        //transcation.toDate = JsonPath.read(json, "$.transactions[0].purchase.purchase_date");
 
         return transcation;
     }

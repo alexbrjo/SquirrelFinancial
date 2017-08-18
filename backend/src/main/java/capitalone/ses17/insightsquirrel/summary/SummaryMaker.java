@@ -43,7 +43,7 @@ public class SummaryMaker {
         String json = elasticController.getTimeLocationCategoy(start, end, latitude, longitude, category);
 
         // transform data
-        Summary summary = new Summary();
+        Summary summary = new Summary(); //JsonHelper.jsonToTransactions(json));
 
         summary.category = JsonPath.read(json, "$.hits.hits[0]._source.merchant.category[0]").toString();
         summary.humanizedDate = "the last week";
@@ -55,8 +55,17 @@ public class SummaryMaker {
         return summary;
     }
 
-    public static void main(String[] args) {
-        SummaryMaker s = new SummaryMaker();
+    public Summary getPrediction(double radius, String location,
+                              Date start, Date end, String category) {
+
+        return null;
     }
 
+    public Summary getAdvice(String start, String end) {
+        String json = elasticController.getTimeLocationCategoy(null, null, 0, 0, "");
+
+
+
+        return null;
+    }
 }
