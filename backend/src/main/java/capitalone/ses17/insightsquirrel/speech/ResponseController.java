@@ -38,10 +38,11 @@ public class ResponseController {
             String reponse = pastSpendingIntent(location, fromDate, toDate, category);
             return reponse == null ? DEFAULT_RESPONSE : reponse;
         } else if (intent.equals("FutureSpending")) {
-            String fromDate = "2017-08-18";
-            String toDate = "2017-08-04";
-            String name = JsonPath.read(payload, "$.request.intent.slots.Name.value");
-            String reponse = futureSpendingIntent(fromDate, toDate, name);
+            String toDate = "2017-08-18";
+            String fromDate = "2017-08-04";
+            String timePeriod = JsonPath.read(payload, "$.request.intent.slots.timeperiod.value");
+            String name = JsonPath.read(payload, "$.request.intent.slots.futuremerchant.value");
+            String reponse = futureSpendingIntent(fromDate, toDate, name, timePeriod);
             return reponse == null ? DEFAULT_RESPONSE : reponse;
         } else if (intent.equals("Distribution")) {
             String fromDate = JsonPath.read(payload, "$.request.intent.slots.fromdate.value");
@@ -75,11 +76,15 @@ public class ResponseController {
         return response;
     }
 
-    private String futureSpendingIntent(String fromDate, String toDate, String name) {
+    private String futureSpendingIntent(String fromDate, String toDate, String name, String timePeriod) {
         String response = null;
         FutureSpendingSummary summary = summaryMaker.getFutureSpending(name, fromDate, toDate);
 
-        response = String.format("I'm guessing you will spend $%.2f in the next week", summary.total);
+        int multiplier = 7;
+        if (!timePeriod.contains("W")) {
+            multiplier = 30;
+        }
+        response = String.format("I'm guessing you will spend $%.2f in the next week", summary.total * multiplier);
         if (summary.name != null) {
             response += String.format(" on %s", summary.name);
         }
