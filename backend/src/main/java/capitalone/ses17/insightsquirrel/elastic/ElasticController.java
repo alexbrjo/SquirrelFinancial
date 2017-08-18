@@ -15,7 +15,7 @@ public class ElasticController {
     @Autowired
     private ElasticService elasticService;
 
-    public String getTimeLocationCategoy(Date fromDate, Date toDate, double lon, double lat, String category) {
+    public String getTimeLocationCategoy(String fromDate, String toDate, double lon, double lat, String category) {
         return elasticService.DateLocationCategory(fromDate, toDate, lon, lat, category);
     }
 
