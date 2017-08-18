@@ -26,16 +26,17 @@ public class ResponseController {
         String intent = JsonPath.read(payload, "$.request.intent.name");
         // default response if request fails
         String response = "I'm sorry, I'm unable to find financial data on that request.";
-//        String datePeriod = JsonPath.read(payload, "$.request.intent.slots.dateperiodslot.value");
-//        Calendar calendar = DatatypeConverter.parseDateTime(datePeriod);
-//        Date date = calendar.getTime();
-//        response = date.toString();
 
-      //  String location = JsonPath.read(payload, "$.request.intent.slots.regionslot.value");
-        //String category = JsonPath.read(payload, "$.request.intent.slots.category.value");
+        String fromDateString = JsonPath.read(payload, "$.request.intent.slots.fromdate.value");
+        String toDateString = JsonPath.read(payload, "$.request.intent.slots.todate.value");
 
-        double r = 3.14;
-        Summary summary = summaryMaker.getSummary(r, "{}", null, null,"{}" );
+
+        String city = JsonPath.read(payload, "$.request.intent.slots.City.value");
+        String state = JsonPath.read(payload, "$.request.intent.slots.State.value");
+        String category = JsonPath.read(payload, "$.request.intent.slots.Category.value");
+
+        double r = 20;
+        Summary summary = summaryMaker.getSummary(r, city, fromDateString, toDateString, category);
 
         response = String.format("From %s to %s, you spent %f on %s", summary.fromDate, summary.toDate, summary.total, summary.category);
         return response;

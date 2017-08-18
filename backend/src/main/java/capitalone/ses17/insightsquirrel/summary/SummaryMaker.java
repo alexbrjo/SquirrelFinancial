@@ -2,7 +2,6 @@ package capitalone.ses17.insightsquirrel.summary;
 
 import capitalone.ses17.insightsquirrel.elastic.ElasticController;
 import capitalone.ses17.insightsquirrel.summary.model.Transaction;
-import capitalone.ses17.insightsquirrel.summary.util.JsonHelper;
 import com.google.gson.Gson;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
@@ -25,7 +24,7 @@ public class SummaryMaker {
     private ElasticController elasticController;
 
     public Summary getSummary(double radius, String location,
-                              Date start, Date end, String category) {
+                              String start, String end, String category) {
 
         GeoApiContext context = new GeoApiContext.Builder()
                 //.apiKey("YOUR-KEY-HERE")
@@ -38,14 +37,13 @@ public class SummaryMaker {
             // yikes
         }
 
-        double latitude = 35.787743;   // results[0].geometry.location.lat;
-        double longitude = -78.644257; // results[0].geometry.location.lng;
+        double latitude = 35.909;   // results[0].geometry.location.lat;
+        double longitude = -79.046; // results[0].geometry.location.lng;
 
         String json = elasticController.getTimeLocationCategoy(start, end, latitude, longitude, category);
 
         // transform data
-
-        Summary summary = new Summary();//JsonHelper.jsonToTransactions(json));
+        Summary summary = new Summary();
 
         summary.category = JsonPath.read(json, "$.hits.hits[0]._source.merchant.category[0]").toString();
         summary.humanizedDate = "the last week";
@@ -57,14 +55,8 @@ public class SummaryMaker {
         return summary;
     }
 
-    public Summary getPrediction(double radius, String location,
-                              Date start, Date end, String category) {
-        return null;
-    }
-
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         SummaryMaker s = new SummaryMaker();
-        s.getSummary(15, "raleigh",  new Date(), new Date(), "");
     }
 
 }
