@@ -71,4 +71,63 @@ public class ElasticService {
         }
     }
 
+    public String AverageTimeMerchant(String fromDate, String toDate, String merchant) {
+
+        String query = String.format("{\n" +
+                        "  \"query\": {\n" +
+                        "    \"bool\": {\n" +
+                        "      \"must\": [\n" +
+                        "        {\n" +
+                        "          \"query_string\": {\n" +
+                        "            \"analyze_wildcard\": true,\n" +
+                        "            \"query\": \"*\"\n" +
+                        "          }\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "          \"match_phrase\": {\n" +
+                        "            \"merchant.name\": {\n" +
+                        "              \"query\": \"%s\"\n" +
+                        "            }\n" +
+                        "          }\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "          \"range\": {\n" +
+                        "            \"@timestamp\": {\n" +
+                        "              \"gte\": \"%s\",\n" +
+                        "              \"lte\": \"%s\",\n" +
+                        "              \"format\": \"yyyy-MM-dd\"\n" +
+                        "            }\n" +
+                        "          }\n" +
+                        "        }\n" +
+                        "      ],\n" +
+                        "      \"must_not\": []\n" +
+                        "    }\n" +
+                        "  },\n" +
+                        "  \"size\": 0,\n" +
+                        "  \"_source\": {\n" +
+                        "    \"excludes\": []\n" +
+                        "  },\n" +
+                        "  \"aggs\": {\n" +
+                        "    \"1\": {\n" +
+                        "      \"avg\": {\n" +
+                        "        \"field\": \"purchase.amount\"\n" +
+                        "      }\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}",
+                merchant, fromDate, toDate);
+        try {
+            HttpResponse<String> response = Unirest.post("http://ec2-52-55-165-133.compute-1.amazonaws.com:9200/logstash-squirrel-%2A/_search")
+                    .header("content-type", "application/json")
+                    .header("cache-control", "no-cache")
+                    .body(query)
+                    .asString();
+
+            return response.getBody();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

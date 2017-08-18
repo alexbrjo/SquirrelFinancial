@@ -19,8 +19,8 @@ public class ElasticController {
         return elasticService.DateLocationCategory(fromDate, toDate, lon, lat, category);
     }
 
-    public String getAverageTimeCategory(Date fromDate, Date toDate, String Category) {
-        return null;
+    public String getAverageTimeMerchant(String fromDate, String toDate, String merchant) {
+        return elasticService.AverageTimeMerchant(fromDate, toDate, merchant);
     }
 
 }
