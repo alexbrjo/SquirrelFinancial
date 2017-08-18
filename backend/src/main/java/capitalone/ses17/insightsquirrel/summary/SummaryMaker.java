@@ -1,15 +1,13 @@
 package capitalone.ses17.insightsquirrel.summary;
 
 import capitalone.ses17.insightsquirrel.elastic.ElasticController;
+import capitalone.ses17.insightsquirrel.summary.util.JsonHelper;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
-import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
-import java.util.Date;
 
 /**
  * Creates summaries of transactions to be consumed by the core API
@@ -22,35 +20,25 @@ public class SummaryMaker {
     @Autowired
     private ElasticController elasticController;
 
-    public Summary getPastSpending(double radius, String location,
-                              String start, String end, String category) {
+    public PastSpendingSummary getPastSpending(double radius, String location,
+                                        String start, String end, String category) {
 
         LatLng loc = getCoordinates(location);
         String json = elasticController.getTimeLocationCategoy(start, end, loc.lat, loc.lng, category);
-
-        // transform data
-        Summary summary = new Summary(); //JsonHelper.jsonToTransactions(json));
-
-        summary.category = JsonPath.read(json, "$.hits.hits[0]._source.merchant.category[0]").toString();
-        summary.humanizedDate = "the last week";
-        summary.total = ((Double) JsonPath.read(json, "$.hits.hits[0]._source.purchase.amount")).doubleValue();
-        summary.fromDate = new Date(1499659200000L); // JsonPath.read(json, "$.transactions[0].purchase.purchase_date
-        summary.toDate = new Date(1498881600000L);   // JsonPath.read(json, "$.transactions[0].purchase.purchase_date
-        summary.location = location;
-
-        return summary;
+        return new PastSpendingSummary(json);
     }
 
-    public Summary getFutureSpending(double radius, String name,
-                              String start, String end, String category) {
+    public FurtureSpendingSummary getFutureSpending(String name, String start, String end) {
 
-        return null;
+        String json = elasticController.getAverageTimeCategory(null, null, name);
+        return new FurtureSpendingSummary(json);
+
     }
 
-    public Summary getSpendingAdvice(String start, String end) {
-        String json = elasticController.getTimeLocationCategoy(null, null, 0, 0, "");
+    public SpendingAdviceSummary getSpendingAdvice(String start, String end) {
 
-        return null;
+        String json = ""; // elasticController.getSpendingProfile()
+        return new SpendingAdviceSummary(json);
     }
 
     /*

@@ -1,11 +1,5 @@
 package capitalone.ses17.insightsquirrel.speech;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import javax.xml.bind.DatatypeConverter;
-
 
 import capitalone.ses17.insightsquirrel.summary.*;
 import com.jayway.jsonpath.JsonPath;
@@ -36,7 +30,7 @@ public class ResponseController {
         String category = JsonPath.read(payload, "$.request.intent.slots.Category.value");
 
         double r = 20;
-        Summary summary = summaryMaker.getPastSpending(r, city, fromDateString, toDateString, category);
+        PastSpendingSummary summary = summaryMaker.getPastSpending(r, city, fromDateString, toDateString, category);
 
         response = String.format("From %s to %s, you spent %f on %s", summary.fromDate, summary.toDate, summary.total, summary.category);
         return response;
