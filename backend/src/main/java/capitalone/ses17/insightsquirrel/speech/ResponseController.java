@@ -8,56 +8,62 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ResponseController {
+
+    String DEFAULT_RESPONSE = "I'm sorry, I'm unable to find financial data on that request.";
+
     @Autowired
-    private SummaryMaker summaryMaker;
+    private SummaryMaker summaryMaker = new SummaryMaker();
+
     /*
-    POST endpoint that receives JSON data and formulates a response to send to Alexa.
-    Default response is null if no response can be created.
+     * POST endpoint that receives JSON data and formulates a response to send to Alexa.
+     * Default response is null if no response can be created.
      */
-    @RequestMapping(value = "/response", method = RequestMethod.POST,
-            consumes = "application/json")
+    @RequestMapping(value = "/response", method = RequestMethod.POST, consumes = "application/json")
     public String response(@RequestBody String payload) {
         String intent = JsonPath.read(payload, "$.request.intent.name");
-        // default response if request fails
-        String response = "I'm sorry, I'm unable to find financial data on that request.";
 
-        String fromDateString = JsonPath.read(payload, "$.request.intent.slots.fromdate.value");
-        String toDateString = JsonPath.read(payload, "$.request.intent.slots.todate.value");
+        String fromDate = JsonPath.read(payload, "$.request.intent.slots.fromdate.value");
+        String toDate = JsonPath.read(payload, "$.request.intent.slots.todate.value");
 
+        String city = fixNull(JsonPath.read(payload, "$.request.intent.slots.City.value"));
+        String state = fixNull(JsonPath.read(payload, "$.request.intent.slots.State.value"));
+        String location = fixEmpty(city + " " + state);
 
-        String city = JsonPath.read(payload, "$.request.intent.slots.City.value");
-        String state = JsonPath.read(payload, "$.request.intent.slots.State.value");
         String category = JsonPath.read(payload, "$.request.intent.slots.Category.value");
 
+        String reponse = pastSpendingIntent(location, fromDate, toDate, category);
+        return reponse == null ? DEFAULT_RESPONSE : reponse;
+    }
+
+    private String pastSpendingIntent (String location, String fromDate, String toDate, String category) {
+        String response = null;
+
         double r = 20;
-        PastSpendingSummary summary = summaryMaker.getPastSpending(r, city, fromDateString, toDateString, category);
+        PastSpendingSummary summary = summaryMaker.getPastSpending(r, location, fromDate, toDate, category);
 
-        response = String.format("From %s to %s, you spent %f on %s", summary.fromDate, summary.toDate, summary.total, summary.category);
+        response = String.format("From %s to %s, you spent %f", summary, summary.toDate, summary.total);
+        if (summary.category != null) {
+            response += String.format(" on %s", summary.category);
+        }
+        if (summary.location != null) {
+            response += String.format(" in %s", summary.location);
+        }
+
         return response;
     }
 
-    /*
-    public String budgetResponse(BudgetSummary summary) {
-
-        String response = "You have spent " + " percent of your budget on food, " + " percent on ";
-        return response;
+    private String fixNull (String str) {
+        if (str == null) {
+            return "";
+        }
+        return str;
     }
 
-    public String dataResponse(DataSummary summary) {
-        String r = null;
-        return r;
+    private String fixEmpty (String str) {
+        if ("".equals(str)) {
+            return null;
+        }
+        return str;
     }
 
-    public String locationResponse(LocationSummary summary) {
-
-        String response = "You spent " +  " dollars in ";
-        return response;
-    }
-
-    public String scheduleResponse(List<ScheduleSummary> summary) {
-
-        String r = null;
-        return r;
-    }
-    */
 }

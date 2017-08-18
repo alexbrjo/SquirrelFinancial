@@ -21,21 +21,20 @@ public class SummaryMaker {
     private ElasticController elasticController;
 
     public PastSpendingSummary getPastSpending(double radius, String location,
-                                        String start, String end, String category) {
+                                        String fromDate, String toDate, String category) {
 
         LatLng loc = getCoordinates(location);
-        String json = elasticController.getTimeLocationCategoy(start, end, loc.lat, loc.lng, category);
-        return new PastSpendingSummary(json);
+        String json = elasticController.getTimeLocationCategoy(fromDate, toDate, loc.lat, loc.lng, category);
+        return new PastSpendingSummary(json, fromDate, toDate, location, category);
     }
 
-    public FurtureSpendingSummary getFutureSpending(String name, String start, String end) {
+    public FurtureSpendingSummary getFutureSpending(String name, String fromDate, String toDate) {
 
         String json = elasticController.getAverageTimeCategory(null, null, name);
         return new FurtureSpendingSummary(json);
-
     }
 
-    public SpendingAdviceSummary getSpendingAdvice(String start, String end) {
+    public SpendingAdviceSummary getSpendingAdvice(String fromDate, String toDate) {
 
         String json = ""; // elasticController.getSpendingProfile()
         return new SpendingAdviceSummary(json);
@@ -46,7 +45,7 @@ public class SummaryMaker {
      */
     private LatLng getCoordinates (String location) {
         GeoApiContext context = new GeoApiContext.Builder()
-                //.apiKey("YOUR-KEY-HERE")
+                .apiKey("AIzaSyBj5_PdNi5fYpqUTQPVKgeSv965oXrca70")
                 .build();
 
         GeocodingResult[] results = null;
