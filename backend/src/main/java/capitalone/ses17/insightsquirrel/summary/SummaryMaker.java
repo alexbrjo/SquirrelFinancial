@@ -29,7 +29,7 @@ public class SummaryMaker {
 
     public FutureSpendingSummary getFutureSpending(String name, String fromDate, String toDate) {
 
-        String json = ""; //elasticController.getAverageTimeCategory(fromDate, toDate, name);
+        String json = elasticController.getAverageTimeMerchant(fromDate, toDate, name);
         return new FutureSpendingSummary(json, fromDate, toDate, name);
     }
 

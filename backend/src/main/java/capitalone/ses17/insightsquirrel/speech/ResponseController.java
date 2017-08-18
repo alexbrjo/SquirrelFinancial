@@ -21,23 +21,35 @@ public class ResponseController {
     public String response(@RequestBody String payload) {
         String intent = JsonPath.read(payload, "$.request.intent.name");
 
-        String fromDate = JsonPath.read(payload, "$.request.intent.slots.fromdate.value");
-        String toDate = JsonPath.read(payload, "$.request.intent.slots.todate.value");
 
-        String city = fixNull(JsonPath.read(payload, "$.request.intent.slots.City.value"));
-        String state = fixNull(JsonPath.read(payload, "$.request.intent.slots.State.value"));
-        String location = fixEmpty(city + " " + state);
+        if (intent.equals("DateLocationCategory")) {
+            String fromDate = JsonPath.read(payload, "$.request.intent.slots.fromdate.value");
+            String toDate = JsonPath.read(payload, "$.request.intent.slots.todate.value");
 
-        String category = JsonPath.read(payload, "$.request.intent.slots.Category.value");
-        String name = JsonPath.read(payload, "$.request.intent.slots.Name.value");
+            if (fromDate.contains("2018")) {
+                fromDate = fromDate.replace("2018", "2017");
+                toDate = toDate.replace("2018", "2017");
+            }
 
-        if (intent.equals("Spending")) {
+            String city = fixNull(JsonPath.read(payload, "$.request.intent.slots.City.value"));
+            String state = fixNull(JsonPath.read(payload, "$.request.intent.slots.State.value"));
+            String category = JsonPath.read(payload, "$.request.intent.slots.Category.value");
+            String location = fixEmpty(city + " " + state);
             String reponse = pastSpendingIntent(location, fromDate, toDate, category);
             return reponse == null ? DEFAULT_RESPONSE : reponse;
         } else if (intent.equals("FutureSpending")) {
+            String fromDate = "2017-08-18";
+            String toDate = "2017-08-04";
+            String name = JsonPath.read(payload, "$.request.intent.slots.Name.value");
             String reponse = futureSpendingIntent(fromDate, toDate, name);
             return reponse == null ? DEFAULT_RESPONSE : reponse;
         } else if (intent.equals("Distribution")) {
+            String fromDate = JsonPath.read(payload, "$.request.intent.slots.fromdate.value");
+            String toDate = JsonPath.read(payload, "$.request.intent.slots.todate.value");
+            String city = fixNull(JsonPath.read(payload, "$.request.intent.slots.City.value"));
+            String state = fixNull(JsonPath.read(payload, "$.request.intent.slots.State.value"));
+            String category = JsonPath.read(payload, "$.request.intent.slots.Category.value");
+            String location = fixEmpty(city + " " + state);
             String reponse = distributionIntent(location, fromDate, toDate, category);
             return reponse == null ? DEFAULT_RESPONSE : reponse;
         } else {
@@ -45,7 +57,7 @@ public class ResponseController {
         }
     }
 
-    private String pastSpendingIntent (String location, String fromDate, String toDate, String category) {
+    private String pastSpendingIntent(String location, String fromDate, String toDate, String category) {
         String response = null;
         double r = 20;
         PastSpendingSummary summary = summaryMaker.getPastSpending(r, location, fromDate, toDate, category);
@@ -63,9 +75,9 @@ public class ResponseController {
         return response;
     }
 
-    private String futureSpendingIntent (String fromDate, String toDate, String name) {
+    private String futureSpendingIntent(String fromDate, String toDate, String name) {
         String response = null;
-        FutureSpendingSummary summary = summaryMaker.getFutureSpending(fromDate, toDate, name);
+        FutureSpendingSummary summary = summaryMaker.getFutureSpending(name, fromDate, toDate);
 
         response = String.format("I'm guessing you will spend $%.2f in the next week", summary.total);
         if (summary.name != null) {
@@ -77,21 +89,21 @@ public class ResponseController {
     }
 
 
-    private String distributionIntent (String location, String fromDate, String toDate, String category) {
+    private String distributionIntent(String location, String fromDate, String toDate, String category) {
         String response = null;
 
         return response;
     }
 
 
-    private String fixNull (String str) {
+    private String fixNull(String str) {
         if (str == null) {
             return "";
         }
         return str;
     }
 
-    private String fixEmpty (String str) {
+    private String fixEmpty(String str) {
         if ("".equals(str)) {
             return null;
         }
