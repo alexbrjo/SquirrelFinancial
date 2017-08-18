@@ -23,4 +23,8 @@ public class ElasticController {
         return elasticService.AverageTimeMerchant(fromDate, toDate, merchant);
     }
 
+    public String getDistribution(String fromDate, String toDate) {
+        return elasticService.getDistribution(fromDate, toDate);
+    }
+
 }

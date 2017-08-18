@@ -130,4 +130,60 @@ public class ElasticService {
         }
     }
 
+    public String getDistribution(String fromDate, String toDate) {
+
+        String query = String.format("{\n" +
+                        "  \"size\": 0,\n" +
+                        "  \"query\": {\n" +
+                        "    \"bool\": {\n" +
+                        "      \"must\": [\n" +
+                        "        {\n" +
+                        "          \"query_string\": {\n" +
+                        "            \"analyze_wildcard\": true,\n" +
+                        "            \"query\": \"*\"\n" +
+                        "          }\n" +
+                        "        },\n" +
+                        "        {\n" +
+                        "          \"range\": {\n" +
+                        "            \"@timestamp\": {\n" +
+                        "              \"gte\": \"%s\",\n" +
+                        "              \"lte\": \"%s\",\n" +
+                        "              \"format\": \"yyyy-MM-dd\"\n" +
+                        "            }\n" +
+                        "          }\n" +
+                        "        }\n" +
+                        "      ],\n" +
+                        "      \"must_not\": []\n" +
+                        "    }\n" +
+                        "  },\n" +
+                        "  \"_source\": {\n" +
+                        "    \"excludes\": []\n" +
+                        "  },\n" +
+                        "  \"aggs\": {\n" +
+                        "    \"2\": {\n" +
+                        "      \"terms\": {\n" +
+                        "        \"field\": \"merchant.category.keyword\",\n" +
+                        "        \"size\": 10,\n" +
+                        "        \"order\": {\n" +
+                        "          \"_count\": \"desc\"\n" +
+                        "        }\n" +
+                        "      }\n" +
+                        "    }\n" +
+                        "  }\n" +
+                        "}",
+                fromDate, toDate);
+        try {
+            HttpResponse<String> response = Unirest.post("http://ec2-52-55-165-133.compute-1.amazonaws.com:9200/logstash-squirrel-%2A/_search")
+                    .header("content-type", "application/json")
+                    .header("cache-control", "no-cache")
+                    .body(query)
+                    .asString();
+
+            return response.getBody();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
