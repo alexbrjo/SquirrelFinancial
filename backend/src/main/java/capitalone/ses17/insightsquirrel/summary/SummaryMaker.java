@@ -1,11 +1,10 @@
 package capitalone.ses17.insightsquirrel.summary;
 
 import capitalone.ses17.insightsquirrel.elastic.ElasticController;
-import capitalone.ses17.insightsquirrel.summary.model.Transaction;
-import com.google.gson.Gson;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
+import com.google.maps.model.LatLng;
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,24 +22,11 @@ public class SummaryMaker {
     @Autowired
     private ElasticController elasticController;
 
-    public Summary getSummary(double radius, String location,
+    public Summary getPastSpending(double radius, String location,
                               String start, String end, String category) {
 
-        GeoApiContext context = new GeoApiContext.Builder()
-                //.apiKey("YOUR-KEY-HERE")
-                .build();
-
-        GeocodingResult[] results = null;
-        try {
-            results = GeocodingApi.geocode(context, location).await();
-        } catch (Exception e) {
-            // yikes
-        }
-
-        double latitude = 35.909;   // results[0].geometry.location.lat;
-        double longitude = -79.046; // results[0].geometry.location.lng;
-
-        String json = elasticController.getTimeLocationCategoy(start, end, latitude, longitude, category);
+        LatLng loc = getCoordinates(location);
+        String json = elasticController.getTimeLocationCategoy(start, end, loc.lat, loc.lng, category);
 
         // transform data
         Summary summary = new Summary(); //JsonHelper.jsonToTransactions(json));
@@ -55,17 +41,34 @@ public class SummaryMaker {
         return summary;
     }
 
-    public Summary getPrediction(double radius, String location,
-                              Date start, Date end, String category) {
+    public Summary getFutureSpending(double radius, String name,
+                              String start, String end, String category) {
 
         return null;
     }
 
-    public Summary getAdvice(String start, String end) {
+    public Summary getSpendingAdvice(String start, String end) {
         String json = elasticController.getTimeLocationCategoy(null, null, 0, 0, "");
 
-
-
         return null;
     }
+
+    /*
+     * Textual coordinates to latitude and longitude
+     */
+    private LatLng getCoordinates (String location) {
+        GeoApiContext context = new GeoApiContext.Builder()
+                //.apiKey("YOUR-KEY-HERE")
+                .build();
+
+        GeocodingResult[] results = null;
+        try {
+            results = GeocodingApi.geocode(context, location).await();
+        } catch (Exception e) {
+            // yikes
+        }
+
+        return results[0].geometry.location;
+    }
+
 }
