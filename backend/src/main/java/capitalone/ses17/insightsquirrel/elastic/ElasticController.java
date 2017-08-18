@@ -1,5 +1,6 @@
 package capitalone.ses17.insightsquirrel.elastic;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.util.Date;
@@ -11,8 +12,11 @@ import java.util.Date;
 @Controller
 public class ElasticController {
 
-    public String getTimeLocationCategoy(Date fromDate, Date toDate, double lon, double lat, String Category) {
-        return null;
+    @Autowired
+    private ElasticService elasticService;
+
+    public String getTimeLocationCategoy(Date fromDate, Date toDate, double lon, double lat, String category) {
+        return elasticService.DateLocationCategory(fromDate, toDate, lon, lat, category);
     }
 
     public String getAverageTimeCategory(Date fromDate, Date toDate, String Category) {
