@@ -8,11 +8,11 @@
   - `category`: defaults to all
   - elastic: get me the total of all hits
 
-.futureSpending(dateRange, category)
+.futureSpending(dateRange, name)
 
   - predicts future total spending in category in the dateRange
   - `dateRange`: defaults to next week
-  - `category`: defaults to all
+  - `name`: defaults to all
   - elastic: get me the average of all hits
 
 .advice()
