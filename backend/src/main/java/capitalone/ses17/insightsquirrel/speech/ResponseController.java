@@ -26,34 +26,18 @@ public class ResponseController {
         String intent = JsonPath.read(payload, "$.request.intent.name");
         // default response if request fails
         String response = "I'm sorry, I'm unable to find financial data on that request.";
-        String datePeriod = JsonPath.read(payload, "$.request.intent.slots.dateperiodslot.value");
-        Calendar calendar = DatatypeConverter.parseDateTime(datePeriod);
-        Date date = calendar.getTime();
-        response = date.toString();
+//        String datePeriod = JsonPath.read(payload, "$.request.intent.slots.dateperiodslot.value");
+//        Calendar calendar = DatatypeConverter.parseDateTime(datePeriod);
+//        Date date = calendar.getTime();
+//        response = date.toString();
 
       //  String location = JsonPath.read(payload, "$.request.intent.slots.regionslot.value");
         //String category = JsonPath.read(payload, "$.request.intent.slots.category.value");
 
         double r = 3.14;
-        Summary summary = summaryMaker.getSummary(r, "",date, date,"" );
-        /*
-        switch (intent) {
-            case "Budget":
+        Summary summary = summaryMaker.getSummary(r, "{}", null, null,"{}" );
 
-                response = budgetResponse(budgetSummary);
-                break;
-            case "Data":
-
-                response = dataResponse(dataSummary);
-                break;
-            case "Location":
-
-                response = locationResponse(locationSummary);
-                break;
-            default:
-                break;
-        }
-        */
+        response = String.format("From %s to %s, you spent %f on %s", summary.fromDate, summary.toDate, summary.total, summary.category);
         return response;
     }
 
